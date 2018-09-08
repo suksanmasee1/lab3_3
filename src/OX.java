@@ -1,0 +1,157 @@
+
+public class OX {
+
+    String table[][] = {
+            {" ", "0", "1", "2"},
+            {"0", "-", "-", "-"},
+            {"1", "-", "-", "-"},
+            {"2", "-", "-", "-"},
+
+    };
+    private String currentPlayer;
+    private int turnCount;
+    private int scoreX;
+    private int scoreO;
+    private int scoreDraw;
+
+    public OX() {
+        turnCount = 0;
+        currentPlayer = "X";
+        scoreX = 0;
+        scoreO = 0;
+        scoreDraw = 0;
+    }
+
+    public String getTableString() {
+        String result = "";
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                result = result + table[i][j];
+            }
+            result = result + "\n";
+        }
+        return result;
+    }
+
+    public String getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void switchPlayer() {
+        if (currentPlayer.equals("X")) {
+            currentPlayer = "O";
+        } else {
+            currentPlayer = "X";
+
+        }
+    }
+
+    public boolean put(int col, int row) {
+        try {
+            if (!table[row + 1][col + 1].equals("-")) {
+                return false;
+            }
+            table[row + 1][col + 1] = currentPlayer;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
+        }
+        turnCount++;
+        if (checkWin(col,row)) {
+            if (currentPlayer.equals("X")) {
+                scoreX++;
+            } else if (currentPlayer.equals("O")) {
+                scoreO++;
+            }
+        }
+        if (isDraw()){
+            scoreDraw++;
+        }
+
+        return true;
+    }
+
+    public String get(int col, int row) {
+        if (col > 2 || col < 0 || row > 2 || row < 0) {
+            return null;
+        }
+        return table[row + 1][col + 1];
+    }
+
+    public boolean checkWin(int col, int row) {
+        // checkColWin
+        boolean colWin = true;
+        for( int i=0; i<3; i++){
+            if(!table[i+1][col+1].equals(getCurrentPlayer())){
+                colWin = false;
+            }
+        }
+        if(colWin){
+            return true;
+        }
+        // checkRowWin
+        boolean rowWin = true;
+        for( int i=0; i<3; i++){
+            if(!table[row+1][i+1].equals(getCurrentPlayer())){
+                rowWin = false;
+            }
+        }
+        if(rowWin){
+            return true;
+        }
+        // checkRowES
+        boolean esWin = true;
+        for( int i=0; i<3; i++){
+            if(!table[i+1][i+1].equals(getCurrentPlayer())){
+                esWin = false;
+            }
+        }
+        if(esWin){
+            return true;
+        }
+        // checkRowSS
+        boolean ssWin = true;
+        for( int i=0; i<3; i++){
+            if(!table[i+1][3-i].equals(getCurrentPlayer())){
+                ssWin = false;
+            }
+        }
+        if(ssWin){
+            return true;
+        }
+
+
+        return false;
+    }
+    public void reset() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                table[i + 1][j + 1] = "-";
+            }
+        }
+        currentPlayer = "X";
+        turnCount=0;
+    }
+
+    public int getTurnCount() {
+        return  turnCount;
+    }
+
+    public boolean isDraw() {
+        if (turnCount<9){
+            return  false;
+        }
+        return true;
+    }
+
+    public int getScoreX() {
+        return  scoreX;
+    }
+
+    public int getScoreO() {
+        return  scoreO;
+    }
+
+    public int getScoreDraw() {
+        return  scoreDraw;
+    }
+}
